@@ -1,0 +1,375 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Waleed TMS</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Add before closing body tag -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @RenderSection("Styles", required: false)
+   
+    <style>
+        .btn-gradient {
+            background: linear-gradient(to right, #cc2b5e, #753a88) !important;
+            color: white !important;
+        }
+
+        .swal2-popup {
+            border-radius: 15px;
+        }
+
+        .swal2-title {
+            color: #333;
+        }
+
+        .swal2-confirm {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Make content area take up remaining space */
+        #contentArea {
+            flex: 1;
+            margin-top: 60px; /* Adjust for navbar */
+            padding: 20px;
+        }
+
+        /* Ensure the footer is always at the bottom */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            color: white;
+            text-align: center;
+        }
+
+        /*#contentArea {
+            flex: 1;*/ /* Pushes footer to bottom */
+        /*}*/
+        #navbarNav {
+            transition: margin-right 0.5s ease;
+            position: relative;
+            right: 0;
+            text-align: right;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            color: white;
+            text-align: center;
+        }
+
+        #DashboardNavBar {
+            transition: margin-left 0.5s ease; /* Smooth transition */
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            padding: 15px;
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+        }
+
+        /*#contentArea {
+            transition: margin-left 0.5s ease;*/ /* Smooth transition */
+        /*margin-top: 60px;*/ /* Adjust this if needed to prevent overlap */
+        /*padding: 20px;
+        }*/
+
+        #ModalHeader {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            color: white;
+        }
+
+        #ModalCloseBtn {
+            color: white;
+        }
+
+        .sideMenu {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .mainMenu h2 {
+            text-align: center;
+            letter-spacing: 7px;
+            color: #fff;
+            background: #111;
+            padding: 20px 0;
+        }
+
+        .sideMenu a {
+            padding: 8px 8px 8px 12px;
+            text-decoration: none;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+            font-size: 15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .mainMenu a:hover {
+            color: #fff;
+            background: #111;
+        }
+
+        .sideMenu .closeBtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        div.gallery {
+            border: 1px solid #ccc;
+        }
+
+            div.gallery:hover {
+                border: 1px solid #777;
+            }
+
+            div.gallery img {
+                width: 100%;
+                height: auto;
+            }
+
+        div.desc {
+            padding: 15px;
+            text-align: center;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .responsive {
+            padding: 0 6px;
+            float: left;
+            width: 24.99999%;
+        }
+
+        @@media only screen and (max-width: 700px) {
+            .responsive {
+                width: 49.99999%;
+                margin: 6px 0;
+            }
+        }
+
+        @@media only screen and (max-width: 500px) {
+            .responsive {
+                width: 100%;
+            }
+        }
+
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        #DashboardNavLink {
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .tour-card {
+            display: flex;
+            flex-direction: row;
+            /*align-items: center;*/
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(117, 58, 136, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .tour-image {
+            width: 30%;
+            max-width: 200px;
+            border-radius: 8px;
+        }
+
+        .tour-overview {
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .tour-button {
+            text-align: right;
+        }
+
+        #btn {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            color: white;
+        }
+
+        #bookTourBtn {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+        }
+
+        #thankUModalHeader {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            color: white;
+        }
+
+
+
+        #extraChargeNoticeDubai, #extraChargeNoticeSingapore, #extraChargeNoticeManali, #extraChargeNoticeParis {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+   
+</head>
+<body id="body">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="DashboardNavBar">
+
+        <h4 style="color:white">Waleed - TMS</h4>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                @if (Session["UserName"] != null)
+                {
+                    <li class="nav-item">
+                        <span class="nav-link text-white">Welcome, @Session["UserName"]</span>
+                    </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link" id="DashboardNavLink" href="@Url.Action("Logout", "LoginAndRegister")">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+    <div id="sideMenu" class="sideMenu">
+        <a href="javascript:void(0)" class="closeBtn" onclick="closeNav()">×</a>
+        <div class="mainMenu">
+            <img src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...6BrxJLmhnJwXs1M3EMoAJtlyIogvZo9PU9" alt="TMS LOGO" style="padding:20px">
+
+            @{
+                string userRole = Session["UserRole"] != null ? Session["UserRole"].ToString() : "User";
+            }
+
+            <a href="/ClientAndAdmin/@(userRole == "ADMIN" ? "AdminDashboard" : "Dashboard")">@(userRole == "ADMIN" ? "View Tour Request" : "Dashboard")</a>
+
+            @if (userRole == "USER")
+            {
+                <a href="/RentalCars/Index">Rent a Car</a>
+                <a href="/ClientAndAdmin/ViewStatus">View Tour Status</a>
+                <a href="/RentalCars/MyRentals">View Car Rental Status</a>
+                <a href="/ClientAndAdmin/DownloadInvoice">Invoice</a>
+                <a href="/Feedback/ViewFeedback">Give Feedback</a>
+            }
+
+            @if (userRole == "ADMIN")
+            {
+                <a href="/RentalCars/RentalRequests">View Car Rental Requests</a>
+                <a href="/RentalCars/Dashboard">Car Rental Reports & Analytics</a>
+                <a href="/MonthlyReport/MonthlyReportAndAnalytics">Tours Reports & Analytics </a>
+                <a href="/Feedback/ViewFeedback">Tour Feedbacks</a>
+                @*<a href="/ClientAndAdmin/ViewStatus">View Tour Status</a>*@
+                <a href="/ClientAndAdmin/ManageUsers">Manage Users</a>
+            }
+        </div>
+    </div>
+
+
+
+
+
+    <div id="contentArea">
+        <span style="font-size: 30px; padding: 10px; cursor: pointer" onclick="openNav()">☰</span>
+        <div class="contentText">
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container col-md-12 row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4" style="text-align:center"><p>&copy; 2024 Waleed TMS. All Rights Reserved.</p></div>
+            <div class="col-md-4"></div>
+        </div>
+    </footer>
+
+    <script>
+        function openNav() {
+            document.getElementById("sideMenu").style.width = "300px";
+            document.getElementById("contentArea").style.marginLeft = "300px";
+            document.getElementById("DashboardNavBar").style.marginLeft = "300px";
+            document.getElementById("navbarNav").style.marginRight = "300px"; // Move navbar items inside
+        }
+
+        function closeNav() {
+            document.getElementById("sideMenu").style.width = "0";
+            document.getElementById("contentArea").style.marginLeft = "0";
+            document.getElementById("DashboardNavBar").style.marginLeft = "0";
+            document.getElementById("navbarNav").style.marginRight = "0"; // Reset navbar items
+        }
+
+
+
+        function showContent(content) {
+            document.getElementById("contentTitle").textContent = content + " page";
+            closeNav();
+        }
+        function bookTour() {
+            window.location.href = 'your-booking-url';
+        }
+
+      history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        window.location.href = "@Url.Action("Index", "LoginAndRegister")";
+    };
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @*<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    @RenderSection("Scripts", required: false) <!-- Fix added here -->
+
+</body>
+</html>

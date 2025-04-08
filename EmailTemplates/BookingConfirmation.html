@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .booking-table th {
+            background-color: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .booking-table td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .header {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="header">Booking Confirmation</h2>
+        <p>Dear {{UserName}},</p>
+        <p>Your booking has been approved. Here are the details:</p>
+        
+        <table class="booking-table">
+            <tr>
+                <th>Booking Date</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>{{BookingDate}}</td>
+                <td>{{UserName}}</td>
+                <td>{{UserEmail}}</td>
+                <td style="color: #28a745;">Approved</td>
+            </tr>
+        </table>
+        
+        <p>Thank you for choosing our service!</p>
+    </div>
+</body>
+</html>

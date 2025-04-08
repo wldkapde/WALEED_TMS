@@ -1,0 +1,141 @@
+﻿@model List<WALEED_TMS.Models.TourBookingModel>
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Views/Shared/MainTMSLayout.cshtml";
+}
+<style>
+    /* Table Enhancements */
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+    /* Button Enhancements */
+    .action-btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+</style>
+<div class="container mt-4">
+    <h2 class="mb-3 text-center">Pending Tour Requests</h2>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="table-responsive">
+            <table id="pendingToursTable" class="table table-bordered table-striped text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>User Name</th>
+                        <th>User Email</th>
+                        <th>Tour Location</th>
+                        <th>From Date</th>
+                        <th>End Date</th>
+                        <th>Adults</th>
+                        <th>Children</th>
+                        <th>Estimate ($)</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tour in Model)
+                    {
+                        <tr id="row_@tour.TourID" data-status="@tour.TourStatus">
+                            <td>@tour.UserName</td>
+                            <td>@tour.UserEmail</td>
+                            <td>@tour.TourLocation</td>
+                            <td>@tour.TourStartDate.ToString("yyyy-MM-dd")</td>
+                            <td>@tour.TourEndDate.ToString("yyyy-MM-dd")</td>
+                            <td>@tour.Adults</td>
+                            <td>@tour.Children</td>
+                            <td>$@tour.Estimate</td>
+                            <td id="status_@tour.TourID">
+                                <span class="badge @(tour.TourStatus == "Pending" ? "bg-warning" : (tour.TourStatus == "Confirmed" ? "bg-success" : "bg-danger"))">
+                                    @tour.TourStatus
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button class="btn btn-sm btn-success action-btn px-3"
+                                            id="accept_@tour.TourID"
+                                            onclick="updateStatus(@tour.TourID, 'Accept')">
+                                        ✅ Accept
+                                    </button>
+                                    <p>&nbsp;</p>
+                                    <button class="btn btn-sm btn-danger action-btn px-3"
+                                            id="reject_@tour.TourID"
+                                            onclick="updateStatus(@tour.TourID, 'Reject')">
+                                        ❌ Reject
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-danger">No pending tour requests.</p>
+    }
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        setInterval(fetchPendingTours, 5000); // Fetch every 5 seconds
+    });
+
+    function fetchPendingTours() {
+        $.ajax({
+            url: '/ClientAndAdmin/GetPendingTours', // Call new method in Controller
+            type: 'GET',
+            success: function (data) {
+                $('#pendingToursTable tbody').empty().append(data);
+            },
+            error: function () {
+                console.error("Failed to fetch tours.");
+            }
+        });
+    }
+
+    function updateStatus(tourID, action) {
+        let status = action === "Accept" ? "Confirmed" : "Rejected";
+        let url = action === "Accept" ? "/ClientAndAdmin/AcceptTour" : "/ClientAndAdmin/RejectTour";
+
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tourID })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $("#status_" + tourID).text(status);
+                    $("#row_" + tourID).attr("data-status", status);
+                    $("#accept_" + tourID).prop("disabled", true);
+                    $("#reject_" + tourID).prop("disabled", true);
+                    window.location.reload();
+                } else {
+                    alert("Error updating status.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+</script>

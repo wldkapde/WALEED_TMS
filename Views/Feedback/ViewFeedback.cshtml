@@ -1,0 +1,125 @@
+﻿@{ ViewBag.Title = "ViewFeedback";
+    Layout = "~/Views/Shared/MainTMSLayout.cshtml"; }
+
+@model List<WALEED_TMS.Models.FeedbackModel>
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center" id="TourText">Tour Reviews & Ratings</h1>
+    @if (Session["UserRole"].ToString() == "USER")
+    {
+        <div class="form-container">
+            <h2 class="mb-3">Add Your Review</h2>
+            @using (Html.BeginForm("AddFeedback", "Feedback", FormMethod.Post))
+            {
+                <div class="mb-3">
+                    <label for="rating" class="form-label">Rating (1-5):</label>
+                    <div id="rating-stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="fa fa-star" data-rating="@i"></span>
+                        }
+                        <input type="hidden" id="rating" name="Rating" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="feedbackText" class="form-label">Your Review:</label>
+                    <textarea class="form-control" id="feedbackText" name="FeedbackText" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn" id="btn">Submit Review</button>
+            }
+        </div>
+    }
+
+    <div id="reviews-container">
+        <br />
+        <h2 id ="TourText">Customers 
+            Tour Feedback</h2>
+            @foreach (var feedback in Model)
+            {
+                <div class="review">
+                    <div class="review-header">
+                        <h3>@feedback.UserName</h3>
+                        <p class="rating">
+                            @for (int i = 0; i < feedback.Rating; i++)
+                            {
+                                <span class="fa fa-star checked"></span>
+                            }
+                            @for (int i = feedback.Rating; i < 5; i++)
+                            {
+                                <span class="fa fa-star"></span>
+                            }
+                        </p>
+                    </div>
+                    <p>@feedback.FeedbackText</p>
+                    <small>@feedback.CreatedDate.ToString("MMM dd, yyyy hh:mm tt")</small>
+                </div>
+            }
+</div>
+
+
+</div>
+
+<style>
+    .review {
+        border: 1px solid #dee2e6;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .rating {
+        color: #ffc107;
+    }
+
+    .form-container {
+        border: 1px solid #dee2e6;
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+        .form-container label {
+            font-weight: 500;
+        }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .checked {
+        color: orange;
+    }
+
+    #TourText {
+        background: linear-gradient(to right, #cc2b5e, #753a88);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ratingStars = document.getElementById('rating-stars');
+        const ratingInput = document.getElementById('rating');
+
+        ratingStars.addEventListener('click', function (event) {
+            if (event.target.classList.contains('fa-star')) {
+                const rating = parseInt(event.target.getAttribute('data-rating'));
+                ratingInput.value = rating;
+
+                const stars = ratingStars.querySelectorAll('.fa-star');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('checked');
+                    } else {
+                        star.classList.remove('checked');
+                    }
+                });
+            }
+        });
+    });
+</script>

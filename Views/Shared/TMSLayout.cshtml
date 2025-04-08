@@ -1,0 +1,198 @@
+﻿@*@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waleed Tour Management System</title>
+    <link rel="icon" type="image/x-icon" href="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...6BrxJLmhnJwXs1M3EMoAJtlyIogvZo9PU9">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add your custom CSS here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            box-shadow: 0 4px 8px rgba(117, 58, 136, 0.5); /* Adjusted shadow color */
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+        }
+
+        #btn {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        div.scroll-container {
+            background-color: #333;
+            overflow: auto;
+            white-space: nowrap;
+            padding: 10px;
+        }
+
+            div.scroll-container img {
+                padding: 10px;
+            }
+
+        #NavLink, #ALoginBTN {
+            color: white;
+        }
+        #headerbtn{
+            color: white;
+        }
+        #waleedHeader {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="@Url.Action("Index", "TMSDashboard")">
+                <h4 style="color: black;">Waleed - TMS</h4> <!-- Changed to black for visibility -->
+            </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link NavLink" href="#" id="headerbtn" data-section="services">Services</a></li>
+                        <li class="nav-item"><a class="nav-link NavLink" href="#" id="headerbtn" data-section="about">About</a></li>
+                        <li class="nav-item"><a class="nav-link NavLink" href="#" id="headerbtn" data-section="terms">Terms of Use</a></li>
+                        <li class="nav-item"><a class="nav-link NavLink" href="#" id="headerbtn" data-section="privacy">Privacy Policy</a></li>
+                        <li class="nav-item"><a class="nav-link NavLink" href="#" id="headerbtn" data-section="contact">Contact Us</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="ALoginBTN" href="/LoginAndRegister/Index">Login</a>
+                        </li>
+                    </ul>
+                </div>
+        </nav>
+    </header>
+    <div id="MAIN_BODY">
+        <!-- Main Content -->
+        <main id="main-content" class="container content-section">
+
+            @RenderBody()
+
+        </main>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container col-md-12">
+            <p>&copy; 2024 Waleed TMS. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = {
+                services: `
+                                                        <h2>Services</h2>
+                                                        <p>Our Comprehensive TMS Services – Tailored for Your Business Needs</p>
+                                                        <p>At Waleed Tour Management System, we offer a suite of services designed to optimize every aspect of your transportation management. Our TMS platform is built to handle the complexities of modern logistics, providing you with the tools and support needed to streamline operations and drive efficiency.</p>
+
+                                                        <ul>
+                                                            <li><strong>Freight Management:</strong> Seamlessly manage inbound and outbound freight with advanced scheduling, tracking, and reporting tools.</li>
+                                                            <li><strong>Route Optimization:</strong> Reduce transportation costs and improve delivery times with intelligent route planning and real-time adjustments.</li>
+                                                            <li><strong>Carrier Management:</strong> Easily manage relationships with multiple carriers, ensuring the best rates and reliable service.</li>
+                                                            <li><strong>Order and Inventory Management:</strong> Keep track of orders and inventory levels in real-time, minimizing delays and stockouts.</li>
+                                                            <li><strong>Analytics and Reporting:</strong> Gain deep insights into your logistics operations with customizable reports and data analytics.</li>
+                                                        </ul>
+                                                        <p>Our goal is to empower your business with cutting-edge solutions that enhance productivity, reduce costs, and improve customer satisfaction. Discover how our TMS services can elevate your logistics to the next level.</p>
+                                                    `,
+                about: `
+                                                    <h2>About</h2>
+                                                    <p>About Waleed Tour Management System – Revolutionizing Transportation Management</p>
+                                                    <p>At Waleed Tour Management System, we are dedicated to transforming the way businesses handle their logistics and transportation needs. Our Transportation Management System (TMS) is designed with one goal in mind: to simplify and optimize your logistics operations, allowing you to focus on what matters most – growing your business.</p>
+                                                    <p>With years of experience in the logistics industry, our team of experts has crafted a solution that combines cutting-edge technology with user-friendly design. We understand the challenges faced by businesses in managing transportation, and our TMS is built to address those challenges head-on.</p>
+                                                    <ul>
+                                                        <li><strong>Innovative Technology:</strong> We leverage the latest advancements in technology to provide a system that is not only powerful but also intuitive and easy to use.</li>
+                                                        <li><strong>Customer-Centric Approach:</strong> Your success is our success. We work closely with our clients to ensure our TMS meets their unique needs and drives tangible results.</li>
+                                                        <li><strong>Commitment to Excellence:</strong> From seamless integration to top-notch customer support, we are committed to delivering excellence in every aspect of our service.</li>
+                                                    </ul>
+                                                    <p>Join the many businesses that have trusted [Your Company Name] TMS to revolutionize their logistics operations. Discover how we can help you achieve greater efficiency, reduce costs, and enhance your overall transportation management strategy.</p>
+                                                `,
+                terms: `
+                                            <h2>Terms of Use</h2>
+                                            <p>Welcome to Waleed Tour Management System. By using our Transportation Management System (TMS), you agree to comply with the following terms and conditions:</p>
+                                            <ul>
+                                                <li><strong>Acceptance of Terms:</strong> By accessing or using our TMS, you agree to be bound by these terms. If you do not agree, please do not use our services.</li>
+                                                <li><strong>User Responsibilities:</strong> You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.</li>
+                                                <li><strong>Prohibited Activities:</strong> You agree not to misuse our system for any unlawful or unauthorized purpose, including but not limited to hacking, distributing malware, or violating any laws.</li>
+                                                <li><strong>Intellectual Property:</strong> All content, trademarks, and data on our platform are the property of [Your Company Name] and may not be used without our permission.</li>
+                                                <li><strong>Limitation of Liability:</strong> [Your Company Name] is not liable for any damages arising from the use of our TMS, including but not limited to data loss or service interruptions.</li>
+                                                <li><strong>Modification of Terms:</strong> We reserve the right to update or modify these terms at any time. Continued use of the TMS after changes implies acceptance of the new terms.</li>
+                                            </ul>
+                                            <p>Please review these terms regularly to stay informed of any updates. Your compliance with these terms ensures a safe and efficient experience for all users.</p>
+                                        `,
+                privacy: `
+                                            <h2>Privacy Policy</h2>
+                                            <p>Your privacy is important to us at Waleed Tour Management System. This Privacy Policy outlines how we collect, use, and protect your personal information:</p>
+                                            <ul>
+                                                <li><strong>Information Collection:</strong> We collect personal information when you register for our TMS, such as your name, email address, and company details. We also collect data related to your usage of the platform.</li>
+                                                <li><strong>Use of Information:</strong> The information we collect is used to provide, maintain, and improve our TMS services, as well as to communicate with you regarding your account and any updates or issues.</li>
+                                                <li><strong>Data Protection:</strong> We implement industry-standard security measures to protect your data from unauthorized access, disclosure, or alteration.</li>
+                                                <li><strong>Third-Party Sharing:</strong> We do not share your personal information with third parties except as necessary to provide our services or as required by law.</li>
+                                                <li><strong>Cookies:</strong> Our TMS uses cookies to enhance your user experience, such as keeping you logged in and remembering your preferences.</li>
+                                                <li><strong>Your Rights:</strong> You have the right to access, update, or delete your personal information at any time. Please contact us if you have any concerns regarding your data.</li>
+                                            </ul>
+                                            <p>We are committed to protecting your privacy and ensuring transparency in how we handle your information. Please review this policy regularly, as we may update it to reflect changes in our practices or legal requirements.</p>
+                                        `,
+                contact: `
+                                        <h2>Contact</h2>
+                                        <p>If you have any questions or need support, please reach out to us at the following contact details:</p>
+                                        <ul>
+                                            <li><strong>Email:</strong> <a href="mailto:wldkapde@gmail.com">wldkapde@gmail.com</a>, <a href="mailto:waleedkapade786@gmail.com">waleedkapade786@gmail.com</a></li>
+                                            <li><strong>Phone:</strong> +91 90228 79875</li>
+                                        </ul>
+                                    `,
+            };
+
+            const mainContent = document.getElementById('main-content');
+
+            document.querySelectorAll('.NavLink').forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    mainContent.innerHTML = sections[section] || `<h2>404</h2><p>Content not found.</p>`;
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

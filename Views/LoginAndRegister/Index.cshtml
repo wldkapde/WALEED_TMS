@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/TMSLayout.cshtml";
+}
+<style>
+
+
+    .login-container {
+        margin-top: 25px;
+        max-width: 400px;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .login-header h2 {
+            font-weight: bold;
+        }
+
+    .form-group label {
+        font-weight: 600;
+    }
+
+    .login-footer {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .login-footer a {
+            color: #007bff;
+        }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .register-link {
+    }
+
+    #LContainer {
+        width: 445px; /* Adjust the width as needed */
+        padding: 20px;
+        background-color: #f8f9fa;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    #HeadingOfLogin {
+        text-align: center;
+        font-style: italic;
+        font-weight: bolder;
+        font-size: xx-large;
+    }
+
+    #forgot-password, #register {
+        text-decoration: none;
+    }
+
+    .loginbtn {
+        background: linear-gradient(to right, #cc2b5e, #753a88);
+    }
+</style>
+
+
+
+
+<div class="container" id="LContainer">
+    <div id="HeadingOfLogin">Login - Waleed TMS</div>
+    <div class="login-container">
+
+        @*<div class="login-header">
+                <h2>Login</h2>
+            </div>*@
+        <form>
+            <div class="form-group">
+                <label for="username">Username/User ID</label>
+                <input type="text" class="form-control" id="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password">
+            </div>
+            <button type="submit" class="btn btn-primary loginbtn" id="submit">Login</button>
+
+        </form>
+        <div class="login-footer">
+           @* <a href="ForgotPassword" id="forgot-password">Forgot Password?</a>*@
+            <div class="register-link">
+                <a href="@Url.Action("Registeration", "LoginAndRegister")" id="register">Register YourSelf !</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById("submit").addEventListener("click", function (event) {
+    event.preventDefault(); // 🛑 Stop Default Form Submission
+
+    const email = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const loginBtn = document.getElementById("submit");
+
+    if (email === "" || password === "") {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    // ⏳ Disable button to prevent multiple clicks
+    loginBtn.disabled = true;
+    loginBtn.innerText = "Logging in...";
+
+    $.ajax({
+        url: '@Url.Action("LoginUser", "LoginAndRegister")',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email: email, password: password }),
+        success: function (response) {
+            if (response.success) {
+                console.log("Redirect URL from server:", response.redirectUrl); // ✅ Debugging Log
+                $("#thankYouModal").modal("show");
+
+                setTimeout(function () {
+                    if (response.redirectUrl && response.redirectUrl !== "") {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        alert("Redirect URL not found.");
+                    }
+                }, 2000);
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert("Login failed. Please try again.");
+        },
+        complete: function () {
+            // 🔄 Enable button after request completes
+            loginBtn.disabled = false;
+            loginBtn.innerText = "Login";
+        }
+    });
+});
+</script>
+
+
+
+

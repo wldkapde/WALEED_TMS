@@ -1,0 +1,791 @@
+﻿@{
+    Layout = "~/Views/Shared/MainTMSLayout.cshtml";
+}
+
+@* -----------------------------------------DUBaI TRIP-------------------------------------------------------- *@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tour-card shadow">
+                <div class="responsive">
+                    <div class="gallery">
+                        <img src="~/Content/IMAGES/DUBAI_TRIP.jpg" alt="DUBAI" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/DUBAI_TRIP.jpg" alt="DUBAI" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/DUBAI_TRIP.jpg" alt="DUBAI" width="600" height="400" style="padding-bottom: 3px;">
+                        <div class="desc">7-Day Dubai Tour</div>
+                    </div>
+                </div>
+
+                <div class="tour-overview">
+                    <h4><b>7-Day Dubai Tour</b></h4>
+                    <p>
+                        Explore the wonders of Dubai with our 7-day tour package. Enjoy the modern marvels, cultural experiences, and thrilling activities that Dubai has to offer.
+                    </p>
+                    <h5><b>Itinerary</b></h5>
+                    <ul>
+                        <li><strong>Day 1:</strong> Arrival in Dubai, transfer to hotel, evening at leisure.</li>
+                        <li><strong>Day 2:</strong> City Tour (Burj Khalifa, Dubai Mall, Dubai Fountain, Jumeirah Mosque, Dubai Museum), lunch at a local restaurant, visit Jumeirah Beach, Dhow Cruise Dinner.</li>
+                        <li><strong>Day 3:</strong> Free time, Desert Safari with dune bashing, camel riding, sandboarding, BBQ Dinner in the desert camp.</li>
+                        <li><strong>Day 4:</strong> Visit to Miracle Garden, Global Village, and Dubai Marina.</li>
+                        <li><strong>Day 5:</strong> Abu Dhabi City Tour (Sheikh Zayed Grand Mosque, Ferrari World, Yas Island).</li>
+                        <li><strong>Day 6:</strong> Free day for shopping or optional tours (Ski Dubai, IMG Worlds of Adventure).</li>
+                        <li><strong>Day 7:</strong> Departure from Dubai, transfer to the airport.</li>
+                    </ul>
+                    <h5><b>Inclusions</b></h5>
+                    <ul>
+                        <li>6 nights accommodation in a 4-star hotel</li>
+                        <li>Daily breakfast and dinner</li>
+                        <li>All transfers and sightseeing tours as per itinerary</li>
+                        <li>Desert Safari with BBQ Dinner</li>
+                        <li>Dhow Cruise Dinner</li>
+                        <li>Entry fees to attractions as mentioned</li>
+                    </ul>
+                    <h5><b>Price</b></h5>
+                    <p>Approx. $1200 per adult and $900 for children (below age of 18 years). (based on double occupancy)</p>
+                </div>
+                <div class="tour-button">
+                    <button type="button" class="btn btn-primary" id="btn" data-toggle="modal" data-target="#DubaiTour">
+                        Book Tour
+                    </button>
+                </div>
+                <!------------------ Modal ------------------------------>
+                <div class="modal fade" id="DubaiTour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" id="ModalHeader">
+                                <h5 class="modal-title" id="exampleModalLabel">Book Dubai Tour</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" id="ModalCloseBtn">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="dubaiTourForm">
+                                    <p id="extraChargeNoticeDubai"></p>
+                                    <div class="form-group">
+                                        <label for="fromDateDubai">From Date</label>
+                                        <input type="date" class="form-control" id="fromDateDubai" required onchange="setMinToDateDubai()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="toDateDubai">To Date</label>
+                                        <input type="date" class="form-control" id="toDateDubai" required onchange="calculateEstimateForDubai()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="adultsDubai">Adults</label>
+                                        <input type="number" class="form-control" id="adultsforDubai" min="1" value="1" required oninput="calculateEstimateForDubai()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="childrenDubai">Children (below the age of 10)</label>
+                                        <input type="number" class="form-control" id="childrenforDubai" min="0" value="0" required oninput="calculateEstimateForDubai()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="totalEstimateDubai">Total Estimate ($)</label>
+                                        <input type="text" class="form-control" id="totalEstimateforDubai" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="bookTourBtn">Book Tour</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thank you Modal -->
+                <div class="modal fade" id="thankYouModal" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" >
+                            <div class="modal-header" id="thankUModalHeader">
+                                <h5 class="modal-title" id="thankYouModalLabel">Thank You!</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Thank you for booking. Your application has been submitted.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* -------------------------------SINGAPORE TRIP--------------------------------------------------- *@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tour-card shadow">
+                <div class="responsive">
+                    <div class="gallery">
+                        <img src="~/Content/IMAGES/SINGAPORE_TRIP.jpg" alt="SINGAPORE" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/SINGAPORE_TRIP.jpg" alt="SINGAPORE" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/SINGAPORE_TRIP.jpg" alt="SINGAPORE" width="600" height="400" style="padding-bottom: 3px;">
+                        <div class="desc">7-Day Singapore Tour</div>
+                    </div>
+                </div>
+
+                <div class="tour-overview">
+                    <h4><b>7-Day Singapore Tour</b></h4>
+                    <p>
+                        Discover the vibrant city of Singapore with our 7-day tour package. Experience the blend of modernity and tradition, explore iconic landmarks, and enjoy world-class attractions.
+                    </p>
+                    <h5><b>Itinerary</b></h5>
+                    <ul>
+                        <li><strong>Day 1:</strong> Arrival in Singapore, transfer to hotel, evening at leisure.</li>
+                        <li><strong>Day 2:</strong> City Tour (Marina Bay Sands, Gardens by the Bay, Merlion Park, Chinatown), lunch at a local restaurant.</li>
+                        <li><strong>Day 3:</strong> Sentosa Island (Universal Studios, S.E.A. Aquarium, Adventure Cove Waterpark), evening return to hotel.</li>
+                        <li><strong>Day 4:</strong> Singapore Zoo, River Safari, Night Safari, lunch at the zoo.</li>
+                        <li><strong>Day 5:</strong> Jurong Bird Park, afternoon free time for shopping or leisure.</li>
+                        <li><strong>Day 6:</strong> Orchard Road shopping, visit to Little India and Arab Street.</li>
+                        <li><strong>Day 7:</strong> Departure from Singapore, transfer to the airport.</li>
+                    </ul>
+                    <h5><b>Inclusions</b></h5>
+                    <ul>
+                        <li>6 nights accommodation in a 4-star hotel</li>
+                        <li>Daily breakfast and dinner</li>
+                        <li>All transfers and sightseeing tours as per itinerary</li>
+                        <li>Entry fees to attractions as mentioned</li>
+                    </ul>
+                    <h5><b>Price</b></h5>
+                    <p>Approx. $1500 per person (based on double occupancy)</p>
+                </div>
+                <div class="tour-button">
+                    <button type="button" class="btn btn-primary" id="btn" data-toggle="modal" data-target="#SingaporeTour">
+                        Book Tour
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------ Modal ----------------------------------->
+<div class="modal fade" id="SingaporeTour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="ModalHeader">
+                <h5 class="modal-title" id="exampleModalLabel">Book Singapore Tour</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" id="ModalCloseBtn">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <p id="extraChargeNoticeSingapore"></p>
+
+                    <div class="form-group">
+                        <label for="fromDateSingapore">From Date</label>
+                        <input type="date" class="form-control" id="fromDateSingapore" required onchange="setMinToDateSingapore()">
+                    </div>
+                    <div class="form-group">
+                        <label for="toDateSingapore">To Date</label>
+                        <input type="date" class="form-control" id="toDateSingapore" required onchange="calculateEstimateForSingapore()">
+                    </div>
+                    <div class="form-group">
+                        <label for="adultsSingapore">Adults</label>
+                        <input type="number" class="form-control" id="adultsforSingapore" min="1" value="1" required oninput="calculateEstimateForSingapore()">
+                    </div>
+                    <div class="form-group">
+                        <label for="childrenSingapore">Children (below the age of 10)</label>
+                        <input type="number" class="form-control" id="childrenforSingapore" min="0" value="0" required oninput="calculateEstimateForSingapore()">
+                    </div>
+                    <div class="form-group">
+                        <label for="totalEstimateSingapore">Total Estimate ($)</label>
+                        <input type="text" class="form-control" id="totalEstimateforSingapore" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSingaporeBookTour">Book Tour</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="thankYouModalForSingapore" tabindex="-1" role="dialog" aria-labelledby="thankYouModalForSingaporeLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="thankUModalHeader">
+                <h5 class="modal-title" id="thankYouModalForSingaporeLabel">Thank You!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Thank you for booking. Your application has been submitted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* -----------------------------------MANALI TRIP-------------------------------------------------------------- *@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tour-card shadow">
+                <div class="responsive">
+                    <div class="gallery">
+                        <img src="~/Content/IMAGES/MANALI_TRIP.jpg" alt="MANALI" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/MANALI_TRIP.jpg" alt="MANALI" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/MANALI_TRIP.jpg" alt="MANALI" width="600" height="400" style="padding-bottom: 3px;">
+                        <div class="desc">7-Day Manali Tour</div>
+                    </div>
+                </div>
+
+                <div class="tour-overview">
+                    <h4><b>7-Day Manali Tour</b></h4>
+                    <p>
+                        Experience the beauty of the Himalayas with our 7-day Manali tour package. From scenic landscapes to thrilling adventures, discover everything that makes Manali a top destination.
+                    </p>
+                    <h5><b>Itinerary</b></h5>
+                    <ul>
+                        <li><strong>Day 1:</strong> Arrival in Manali, transfer to hotel, evening at leisure.</li>
+                        <li><strong>Day 2:</strong> Local Sightseeing (Hadimba Temple, Manu Temple, Vashisht Temple, Tibetan Monastery), lunch at a local restaurant.</li>
+                        <li><strong>Day 3:</strong> Solang Valley (adventure activities like paragliding, skiing), lunch at Solang, return to hotel.</li>
+                        <li><strong>Day 4:</strong> Day trip to Rohtang Pass (snow activities, scenic views), lunch at a local restaurant.</li>
+                        <li><strong>Day 5:</strong> Visit to Naggar Castle and Art Gallery, explore local markets.</li>
+                        <li><strong>Day 6:</strong> Day at leisure for optional activities (trekking, shopping, spa), or visit Manikaran (hot springs and religious sites).</li>
+                        <li><strong>Day 7:</strong> Departure from Manali, transfer to the airport or railway station.</li>
+                    </ul>
+                    <h5><b>Inclusions</b></h5>
+                    <ul>
+                        <li>6 nights accommodation in a 3-star hotel</li>
+                        <li>Daily breakfast and dinner</li>
+                        <li>All transfers and sightseeing tours as per itinerary</li>
+                        <li>Entry fees to attractions as mentioned</li>
+                    </ul>
+                    <h5><b>Price</b></h5>
+                    <p>Approx. $900 per person (based on double occupancy)</p>
+                </div>
+                <div class="tour-button">
+                    <button type="button" class="btn btn-primary" id="btn" data-toggle="modal" data-target="#ManaliTour">
+                        Book Tour
+                    </button>
+                </div>
+                <!------------------------------- Modal ---------------------------->
+                <div class="modal fade" id="ManaliTour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" id="ModalHeader">
+                                <h5 class="modal-title" id="exampleModalLabel">Book Manali Tour</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" id="ModalCloseBtn">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <p id="extraChargeNoticeManali"></p>
+
+                                    <div class="form-group">
+                                        <label for="fromDateManali">From Date</label>
+                                        <input type="date" class="form-control" id="fromDateManali" required onchange="setMinToDateManali()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="toDateManali">To Date</label>
+                                        <input type="date" class="form-control" id="toDateManali" required onchange="calculateEstimateForManali()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="adultsManali">Adults</label>
+                                        <input type="number" class="form-control" id="adultsforManali" min="1" value="1" required oninput="calculateEstimateForManali()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="childrenManali">Children (below the age of 10)</label>
+                                        <input type="number" class="form-control" id="childrenforManali" min="0" value="0" required oninput="calculateEstimateForManali()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="totalEstimateManali">Total Estimate ($)</label>
+                                        <input type="text" class="form-control" id="totalEstimateforManali" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="btnBookTourManali">Book Tour</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* ------------------------------------------PARIS TRIP------------------------------------------------------------- *@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tour-card shadow">
+                <div class="responsive">
+                    <div class="gallery">
+                        <img src="~/Content/IMAGES/PARIS_TRIP.jpg" alt="PARIS" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/PARIS_TRIP.jpg" alt="PARIS" width="600" height="400" style="padding-bottom: 3px;">
+                        <img src="~/Content/IMAGES/PARIS_TRIP.jpg" alt="PARIS" width="600" height="400" style="padding-bottom: 3px;">
+                        <div class="desc">7-Day Paris Tour</div>
+                    </div>
+                </div>
+
+                <div class="tour-overview">
+                    <h4><b>7-Day Paris Tour</b></h4>
+                    <p>
+                        Discover the charm and elegance of Paris with our 7-day tour package. From iconic landmarks to romantic strolls, immerse yourself in the magic of the City of Light.
+                    </p>
+                    <h5><b>Itinerary</b></h5>
+                    <ul>
+                        <li><strong>Day 1:</strong> Arrival in Paris, transfer to hotel, evening at leisure.</li>
+                        <li><strong>Day 2:</strong> City Tour (Eiffel Tower, Louvre Museum, Notre-Dame Cathedral, Champs-Élysées), lunch at a local café.</li>
+                        <li><strong>Day 3:</strong> Visit to Montmartre (Sacré-Cœur Basilica, Place du Tertre), explore local art galleries, lunch in Montmartre.</li>
+                        <li><strong>Day 4:</strong> Day trip to Versailles Palace (Grand and Petit Trianon, Versailles Gardens), return to Paris.</li>
+                        <li><strong>Day 5:</strong> Explore Le Marais district, visit the Picasso Museum, enjoy a Seine River cruise, dinner at a gourmet restaurant.</li>
+                        <li><strong>Day 6:</strong> Visit to Disneyland Paris or Parc Asterix, lunch at the park, return to Paris in the evening.</li>
+                        <li><strong>Day 7:</strong> Departure from Paris, transfer to the airport.</li>
+                    </ul>
+                    <h5><b>Inclusions</b></h5>
+                    <ul>
+                        <li>6 nights accommodation in a 4-star hotel</li>
+                        <li>Daily breakfast and dinner</li>
+                        <li>All transfers and sightseeing tours as per itinerary</li>
+                        <li>Entry fees to attractions as mentioned</li>
+                        <li>Seine River Cruise</li>
+                    </ul>
+                    <h5><b>Price</b></h5>
+                    <p>Approx. $2000 per person (based on double occupancy)</p>
+                </div>
+                <div class="tour-button">
+                    <button type="button" class="btn btn-primary" id="btn" data-toggle="modal" data-target="#ParisTour">
+                        Book Tour
+                    </button>
+                </div>
+                <!-------------------------------------------------- Modal ------------------------------------------>
+                <div class="modal fade" id="ParisTour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" id="ModalHeader">
+                                <h5 class="modal-title" id="exampleModalLabel">Book Paris Tour</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" id="ModalCloseBtn">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <p id="extraChargeNoticeParis"></p>
+
+                                    <div class="form-group">
+                                        <label for="fromDateParis">From Date</label>
+                                        <input type="date" class="form-control" id="fromDateParis" required onchange="setMinToDateParis()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="toDateParis">To Date</label>
+                                        <input type="date" class="form-control" id="toDateParis" required onchange="calculateEstimateForParis()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="adultsParis">Adults</label>
+                                        <input type="number" class="form-control" id="adultsforParis" min="1" value="1" required oninput="calculateEstimateForParis()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="childrenParis">Children (below the age of 10)</label>
+                                        <input type="number" class="form-control" id="childrenforParis" min="0" value="0" required oninput="calculateEstimateForParis()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="totalEstimateParis">Total Estimate ($)</label>
+                                        <input type="text" class="form-control" id="totalEstimateforParis" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="btnBookParisTour">Book Tour</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------SCRIPTS ONLY----------------------------------- *@
+<script>
+
+    //--------------------DUBAI
+   document.getElementById('bookTourBtn').addEventListener('click', function () {
+    const fromDate = document.getElementById('fromDateDubai').value;
+    const toDate = document.getElementById('toDateDubai').value;
+    const adults = parseInt(document.getElementById('adultsforDubai').value) || 0;
+    const children = parseInt(document.getElementById('childrenforDubai').value) || 0;
+    const estimate = parseFloat(document.getElementById('totalEstimateforDubai').value) || 0;
+    const userID = localStorage.getItem("UserID");
+    const tourLocation = "Dubai"; // ✅ FIXED: TourLocation is now "Dubai"
+
+    if (!userID || userID === "null") {
+        alert("User not logged in. Please log in to continue.");
+        return;
+    }
+
+    if (!fromDate || !toDate || isNaN(adults) || isNaN(children) || isNaN(estimate)) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append("UserID", userID);
+    formData.append("TourLocation", tourLocation); // ✅ Fixed: Always sending "Dubai"
+    formData.append("TourStartDate", fromDate);
+    formData.append("TourEndDate", toDate);
+    formData.append("Adults", adults);
+    formData.append("Children", children);
+    formData.append("Estimate", estimate);
+
+    fetch('/Tour/BookTour', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#DubaiTour').modal('hide');
+            $('#thankYouModal').modal('show'); // ✅ Show Thank You Modal on Success
+        } else {
+            alert("Booking failed: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again.");
+    });
+});
+
+    // 🔹 Function to set minimum 'To Date' based on 'From Date'
+    function setMinToDateDubai() {
+        const fromDate = document.getElementById('fromDateDubai').value;
+        document.getElementById('toDateDubai').setAttribute('min', fromDate);
+        calculateEstimateForDubai();
+    }
+
+    // 🔹 Function to calculate total estimated cost
+    function calculateEstimateForDubai() {
+        const fromDate = new Date(document.getElementById('fromDateDubai').value);
+        const toDate = new Date(document.getElementById('toDateDubai').value);
+        const adults = parseInt(document.getElementById('adultsforDubai').value) || 0;
+        const children = parseInt(document.getElementById('childrenforDubai').value) || 0;
+
+        const baseAdultPrice = 1200;
+        const baseChildPrice = 900;
+        const extensionAdultPrice = 100;
+        const extensionChildPrice = 70;
+
+        if (fromDate && toDate && toDate >= fromDate) {
+            const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24));
+            const baseDays = 7;
+            const extraDays = days > baseDays ? days - baseDays : 0;
+
+            const totalAdultPrice = (baseAdultPrice + (extraDays * extensionAdultPrice)) * adults;
+            const totalChildPrice = (baseChildPrice + (extraDays * extensionChildPrice)) * children;
+            const totalPrice = totalAdultPrice + totalChildPrice;
+
+            document.getElementById('totalEstimateforDubai').value = totalPrice.toFixed(2);
+            document.getElementById('extraChargeNoticeDubai').innerText =
+                extraDays > 0
+                    ? `Note: For stays longer than 7 days, an additional $100 per day for adults and $70 per day for children will be applied.`
+                    : '';
+        }
+    }
+
+
+
+    //------------------------SINGAPORE
+
+        document.getElementById('btnSingaporeBookTour').addEventListener('click', function () {
+    const fromDate = document.getElementById('fromDateSingapore').value;
+        const toDate = document.getElementById('toDateSingapore').value;
+        const adults = parseInt(document.getElementById('adultsforSingapore').value) || 0;
+        const children = parseInt(document.getElementById('childrenforSingapore').value) || 0;
+        const estimate = parseFloat(document.getElementById('totalEstimateforSingapore').value) || 0;
+        const userID = localStorage.getItem("UserID");
+        const tourLocation = "Singapore"; // ✅ FIXED: TourLocation is now "Singapore"
+
+        if (!userID || userID === "null") {
+            alert("User not logged in. Please log in to continue.");
+        return;
+    }
+
+        if (!fromDate || !toDate || isNaN(adults) || isNaN(children) || isNaN(estimate) || estimate === 0) {
+            alert("Please fill all required fields.");
+        return;
+    }
+
+        const formData = new URLSearchParams();
+        formData.append("UserID", userID);
+        formData.append("TourLocation", tourLocation);
+        formData.append("TourStartDate", fromDate);
+        formData.append("TourEndDate", toDate);
+        formData.append("Adults", adults);
+        formData.append("Children", children);
+        formData.append("Estimate", estimate);
+
+        console.log("Booking Request Data:", formData.toString()); // ✅ Debugging
+
+        fetch('/Tour/BookTour', {
+            method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+            console.log("Server Response:", data); // ✅ Debugging
+        if (data.success) {
+            // ✅ Ensure Modal Closes Properly
+            $('#SingaporeTour').modal('hide');
+            
+            setTimeout(() => {
+            $('#thankYouModalForSingapore').modal('show'); // ✅ Show Thank You Modal on Success
+            }, 500); // Slight delay to ensure smooth transition
+        } else {
+            alert("Booking failed: " + data.message);
+        }
+    })
+    .catch(error => {
+            console.error("Error:", error);
+        alert("Something went wrong. Please try again.");
+    });
+});
+
+
+    function setMinToDateSingapore() {
+        const fromDate = document.getElementById('fromDateSingapore').value;
+        document.getElementById('toDateSingapore').setAttribute('min', fromDate);
+        calculateEstimateForSingapore();
+    }
+
+    function calculateEstimateForSingapore() {
+        const fromDate = new Date(document.getElementById('fromDateSingapore').value);
+        const toDate = new Date(document.getElementById('toDateSingapore').value);
+        const adults = parseInt(document.getElementById('adultsforSingapore').value);
+        const children = parseInt(document.getElementById('childrenforSingapore').value);
+        const baseAdultPrice = 1500;
+        const baseChildPrice = 1500;
+        const extensionAdultPrice = 100;
+        const extensionChildPrice = 70;
+
+        if (fromDate && toDate && toDate >= fromDate) {
+            const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24));
+            const baseDays = 7;
+            const extraDays = days > baseDays ? days - baseDays : 0;
+
+            const totalAdultPrice = (baseAdultPrice + (extraDays * extensionAdultPrice)) * adults;
+            const totalChildPrice = (baseChildPrice + (extraDays * extensionChildPrice)) * children;
+            const totalPrice = totalAdultPrice + totalChildPrice;
+
+            document.getElementById('totalEstimateforSingapore').value = totalPrice.toFixed(2);
+            if (extraDays > 0) {
+                document.getElementById('extraChargeNoticeSingapore').innerText = `Note: For stays longer than 7 days, an additional $100 per day for adults and $70 per day for children will be applied.`;
+            } else {
+                document.getElementById('extraChargeNoticeSingapore').innerText = '';
+            }
+        }
+    }
+
+    //-----------------------------------MANALI
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const bookTourBtn = document.getElementById('btnBookTourManali');
+
+        if (bookTourBtn) {
+            bookTourBtn.addEventListener('click', function () {
+                console.log("Button Clicked: Book Tour");
+
+                const fromDate = document.getElementById('fromDateManali').value;
+                const toDate = document.getElementById('toDateManali').value;
+                const adults = parseInt(document.getElementById('adultsforManali').value) || 0;
+                const children = parseInt(document.getElementById('childrenforManali').value) || 0;
+                const estimate = parseFloat(document.getElementById('totalEstimateforManali').value) || 0;
+                const userID = localStorage.getItem("UserID");
+                const tourLocation = "Manali";
+
+                if (!userID || userID === "null") {
+                    alert("User not logged in. Please log in to continue.");
+                    return;
+                }
+
+                if (!fromDate || !toDate || isNaN(adults) || isNaN(children) || isNaN(estimate) || estimate === 0) {
+                    alert("Please fill all required fields.");
+                    return;
+                }
+
+                const formData = new URLSearchParams();
+                formData.append("UserID", userID);
+                formData.append("TourLocation", tourLocation);
+                formData.append("TourStartDate", fromDate);
+                formData.append("TourEndDate", toDate);
+                formData.append("Adults", adults);
+                formData.append("Children", children);
+                formData.append("Estimate", estimate);
+
+                console.log("Booking Request Data:", formData.toString());
+
+                fetch('/Tour/BookTour', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Server Response:", data);
+                        if (data.success) {
+                            $('#ManaliTour').modal('hide');
+
+                            setTimeout(() => {
+                                $('#thankYouModal').modal('show');
+                            }, 500);
+                        } else {
+                            alert("Booking failed: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Something went wrong. Please try again.");
+                    });
+            });
+        } else {
+            console.error("Button not found: btnBookTourManali");
+        }
+    });
+
+
+    function setMinToDateManali() {
+        const fromDate = document.getElementById('fromDateManali').value;
+        document.getElementById('toDateManali').setAttribute('min', fromDate);
+        calculateEstimateForManali();
+    }
+
+    function calculateEstimateForManali() {
+        const fromDate = new Date(document.getElementById('fromDateManali').value);
+        const toDate = new Date(document.getElementById('toDateManali').value);
+        const adults = parseInt(document.getElementById('adultsforManali').value);
+        const children = parseInt(document.getElementById('childrenforManali').value);
+        const baseAdultPrice = 900;
+        const baseChildPrice = 600;
+        const extensionAdultPrice = 100;
+        const extensionChildPrice = 70;
+
+        if (fromDate && toDate && toDate >= fromDate) {
+            const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24));
+            const baseDays = 7;
+            const extraDays = days > baseDays ? days - baseDays : 0;
+
+            const totalAdultPrice = (baseAdultPrice + (extraDays * extensionAdultPrice)) * adults;
+            const totalChildPrice = (baseChildPrice + (extraDays * extensionChildPrice)) * children;
+            const totalPrice = totalAdultPrice + totalChildPrice;
+
+            document.getElementById('totalEstimateforManali').value = totalPrice.toFixed(2);
+            if (extraDays > 0) {
+                document.getElementById('extraChargeNoticeManali').innerText = `Note: For stays longer than 7 days, an additional $100 per day for adults and $70 per day for children will be applied.`;
+            } else {
+                document.getElementById('extraChargeNoticeManali').innerText = '';
+            }
+        }
+    }
+
+    //-----------------------------PARIS
+    document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('btnBookParisTour')?.addEventListener('click', function () {
+        console.log("Button Clicked: Book Tour");
+
+        const fromDate = document.getElementById('fromDateParis').value; // FIXED ID
+        const toDate = document.getElementById('toDateParis').value;
+        const adults = parseInt(document.getElementById('adultsforParis').value) || 0;
+        const children = parseInt(document.getElementById('childrenforParis').value) || 0;
+        const estimate = parseFloat(document.getElementById('totalEstimateforParis').value) || 0;
+        const userID = localStorage.getItem("UserID");
+        const tourLocation = "Paris";
+
+        if (!userID || userID === "null") {
+            alert("User not logged in. Please log in to continue.");
+            return;
+        }
+
+        if (!fromDate || !toDate || isNaN(adults) || isNaN(children) || isNaN(estimate) || estimate === 0) {
+            alert("Please fill all required fields.");
+            return;
+        }
+
+        const formData = new URLSearchParams();
+        formData.append("UserID", userID);
+        formData.append("TourLocation", tourLocation);
+        formData.append("TourStartDate", fromDate);
+        formData.append("TourEndDate", toDate);
+        formData.append("Adults", adults);
+        formData.append("Children", children);
+        formData.append("Estimate", estimate);
+
+        console.log("Booking Request Data:", formData.toString());
+
+        fetch('/Tour/BookTour', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server Response:", data);
+                if (data.success) {
+                    $('#ParisTour').modal('hide');
+
+                    setTimeout(() => {
+                        $('#thankYouModal').modal('show');
+                    }, 500);
+                } else {
+                    alert("Booking failed: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Something went wrong. Please try again.");
+            });
+    });
+});
+
+
+
+
+
+    function setMinToDateParis() {
+        const fromDate = document.getElementById('fromDateParis').value;
+        document.getElementById('toDateParis').setAttribute('min', fromDate);
+        calculateEstimateForParis();
+    }
+
+    function calculateEstimateForParis() {
+        const fromDate = new Date(document.getElementById('fromDateParis').value);
+        const toDate = new Date(document.getElementById('toDateParis').value);
+        const adults = parseInt(document.getElementById('adultsforParis').value);
+        const children = parseInt(document.getElementById('childrenforParis').value);
+        const baseAdultPrice = 2000;
+        const baseChildPrice = 1500;
+        const extensionAdultPrice = 100;
+        const extensionChildPrice = 70;
+
+        if (fromDate && toDate && toDate >= fromDate) {
+            const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24));
+            const baseDays = 7;
+            const extraDays = days > baseDays ? days - baseDays : 0;
+
+            const totalAdultPrice = (baseAdultPrice + (extraDays * extensionAdultPrice)) * adults;
+            const totalChildPrice = (baseChildPrice + (extraDays * extensionChildPrice)) * children;
+            const totalPrice = totalAdultPrice + totalChildPrice;
+
+            document.getElementById('totalEstimateforParis').value = totalPrice.toFixed(2);
+            if (extraDays > 0) {
+                document.getElementById('extraChargeNoticeParis').innerText = `Note: For stays longer than 7 days, an additional $100 per day for adults and $70 per day for children will be applied.`;
+            } else {
+                document.getElementById('extraChargeNoticeParis').innerText = '';
+            }
+        }
+    }
+</script>

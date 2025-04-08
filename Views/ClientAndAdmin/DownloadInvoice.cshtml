@@ -1,0 +1,193 @@
+﻿@{ ViewBag.Title = "Download Invoice";
+                Layout = "~/Views/Shared/MainTMSLayout.cshtml"; }
+
+@model List<WALEED_TMS.Models.ConfirmedTourModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Invoice</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        .invoice-container {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .invoice-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+
+        .invoice-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .invoice-table th, .invoice-table td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: center;
+            }
+
+            .invoice-table th {
+                background: linear-gradient(to right, #cc2b5e, #753a88);
+                color: white;
+            }
+
+        .download-btn {
+            background: linear-gradient(to right, #cc2b5e, #753a88);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .invoice-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-content">
+            <div class="invoice-header">WALEED - TOURISM MANAGEMENT CO. PVT. LTD</div>
+            <p>Below are your confirmed tour details:</p>
+
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Confirmed Tours</th>
+                        <th>Booking Date</th>
+                        <th>Tour Estimate</th>
+                        <th>Invoice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var tour in Model)
+                        {
+        <tr>
+            <td>@ViewBag.UserName</td>
+            <td>@tour.TourLocation</td>
+            <td>@tour.CreationDate.ToString("dd-MM-yyyy")</td>
+            <td>$@tour.Estimate.ToString("N2")</td>
+            <td>
+                <button class="download-btn" onclick="downloadInvoice('@tour.TourLocation', '@tour.CreationDate.ToString("dd-MM-yyyy")', '@ViewBag.UserName', '$@tour.Estimate.ToString("N2")')">
+                    Download
+                </button>
+            </td>
+        </tr> }
+                    }
+                    else
+                    {
+        <tr>
+            <td colspan="5">No confirmed tours found.</td>
+        </tr>}
+                </tbody>
+            </table>
+
+            <div class="invoice-footer">
+                Thank you for choosing Waleed Tourism Management System!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        function downloadInvoice(tourName, bookingDate, customerName, tourEstimate) {
+            const doc = new jsPDF();
+            const invoiceNumber = "INV-" + Math.floor(Math.random() * 10000);
+            const currentDate = new Date().toLocaleDateString();
+
+            // Header
+            doc.setFontSize(22);
+            doc.text("Invoice", 105, 20, null, null, 'center');
+            doc.setFontSize(16);
+            doc.text("Waleed Tourism Management Co. Pvt. Ltd", 105, 30, null, null, 'center');
+            doc.setFontSize(12);
+            doc.text("1234 Tourism Lane, Cityville, State, 12345", 105, 40, null, null, 'center');
+            doc.text("Phone: (+91) 9022879875 | Email: waleedkapde786@gmail.com / wldkapde@gmail.com", 105, 45, null, null, 'center');
+            doc.line(20, 50, 190, 50);
+
+            // Invoice details
+            doc.setFontSize(14);
+            doc.text(`Invoice Number: ${invoiceNumber}`, 20, 60);
+            doc.text(`Invoice Date: ${currentDate}`, 140, 60);
+            doc.line(20, 65, 190, 65);
+
+            // Customer details
+            doc.text("Bill To:", 20, 75);
+            doc.setFontSize(12);
+            doc.text(`Customer Name: ${customerName}`, 20, 85);
+            doc.text(`Tour Name: ${tourName}`, 20, 95);
+            doc.text(`Booking Date: ${bookingDate}`, 20, 105);
+
+            // Invoice items
+            doc.line(20, 115, 190, 115);
+            doc.setFontSize(14);
+            doc.text("Description", 25, 125);
+            doc.text("Amount", 160, 125);
+            doc.line(20, 130, 190, 130);
+
+            doc.setFontSize(12);
+            doc.text(`${tourName} Package`, 25, 140);
+            doc.text(`${tourEstimate}`, 160, 140);
+
+            // Tax and total
+            doc.line(20, 150, 190, 150);
+            doc.text("Subtotal:", 130, 160);
+            doc.text(`${tourEstimate}`, 160, 160);
+            doc.text("Tax (10%):", 130, 170);
+
+            // Calculate tax amount (10% of estimate)
+            const estimateValue = parseFloat(tourEstimate.replace('$', '').replace(',', ''));
+            const taxAmount = (estimateValue * 0.1).toFixed(2);
+            doc.text(`$${taxAmount}`, 160, 170);
+
+            // Calculate total
+            const totalAmount = (estimateValue + parseFloat(taxAmount)).toFixed(2);
+            doc.setFontSize(14);
+            doc.text("Total:", 130, 180);
+            doc.text(`$${totalAmount}`, 160, 180);
+
+            // Footer
+            doc.line(20, 190, 190, 190);
+            doc.setFontSize(10);
+            doc.text("Payment Terms: Due on receipt", 20, 200);
+            doc.text("Thank you for your business!", 20, 210);
+            doc.text("© 2024 Waleed TMS. All Rights Reserved.", 105, 220, null, null, 'center');
+
+            // Generate filename in the format CustomerName_TourLocation_BookingDate
+            const cleanCustomerName = customerName.replace(/\s+/g, '_');
+            const cleanTourLocation = tourName.replace(/\s+/g, '_');
+            const cleanBookingDate = bookingDate.replace(/\//g, '-').replace(/\s+/g, '_');
+            const filename = `${cleanCustomerName}_${cleanTourLocation}_${cleanBookingDate}_Invoice.pdf`;
+
+            doc.save(filename);
+        }
+    </script>
+</body>
+</html>

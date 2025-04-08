@@ -1,0 +1,193 @@
+﻿@{
+    ViewBag.Title = "Registeration";
+    Layout = "~/Views/Shared/TMSLayout.cshtml";
+}
+
+<style>
+    #LContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .form-container {
+        max-width: 600px;
+        width: 100%;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    .checkbox-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+    #registerBtn {
+        background: linear-gradient(to right, #cc2b5e, #753a88);
+    }
+</style>
+
+<div id="LContainer">
+    <div class="form-container">
+        <h2>Registration for Waleed TMS</h2>
+        <form id="registrationForm">
+            <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="fullName" required>
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="contactEmail" class="form-label">Contact Email Address</label>
+                <input type="email" class="form-control" id="contactEmail">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Q1. Where did you hear about us?</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="friend" value="friend">
+                    <label class="form-check-label" for="friend">A Friend or Colleague</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="google" value="google">
+                    <label class="form-check-label" for="google">Google</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="blog" value="blog">
+                    <label class="form-check-label" for="blog">Blog Post</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="news" value="news">
+                    <label class="form-check-label" for="news">News Article</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="other" value="other">
+                    <label class="form-check-label" for="other">Other</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Q2. Preferred way to contact</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="contactMethod" id="phone" value="phone">
+                    <label class="form-check-label" for="phone">Phone</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="contactMethod" id="emailContact" value="email">
+                    <label class="form-check-label" for="emailContact">Email</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="contactMethod" id="any" value="any">
+                    <label class="form-check-label" for="any">Any</label>
+                </div>
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" id="privacyPolicy" required>
+                <label class="form-check-label" for="privacyPolicy">
+                    I have read, understood, and accepted the PRIVACY POLICY for TMS.
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="registerBtn">Register</button>
+        </form>
+    </div>
+</div>
+
+<!-- Include jQuery (ensure it's loaded before your custom script) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Bootstrap JS (optional if you don't need any Bootstrap JS components) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $('#registerBtn').click(function (event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        // Get the form values
+        const fullName = $('#fullName').val();
+        const dob = $('#dob').val();
+        const email = $('#email').val();
+        const contactEmail = $('#contactEmail').val();
+        const password = $('#password').val();
+        const confirmPassword = $('#confirmPassword').val();
+
+        // Collect selected checkboxes for question 1
+        const selectedHearAboutUs = [];
+        if ($('#friend').prop('checked')) selectedHearAboutUs.push('A Friend or Colleague');
+        if ($('#google').prop('checked')) selectedHearAboutUs.push('Google');
+        if ($('#blog').prop('checked')) selectedHearAboutUs.push('Blog Post');
+        if ($('#news').prop('checked')) selectedHearAboutUs.push('News Article');
+        if ($('#other').prop('checked')) selectedHearAboutUs.push('Other');
+
+        // Get selected contact method
+        const contactMethod = $('input[name="contactMethod"]:checked').val();
+        const privacyPolicy = $('#privacyPolicy').prop('checked');
+
+        // Check if Privacy Policy is accepted
+        if (!privacyPolicy) {
+            alert('You must accept the Privacy Policy to register.');
+            return;
+        }
+
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            alert('Passwords do not match.');
+            return;
+        }
+
+        // Prepare registration data
+        const registrationData = {
+            FullName: fullName,
+            Dob: dob,
+            Email: email,
+            ContactEmail: contactEmail,
+            Password: password,
+            ContactMethod: contactMethod || 'Not selected',
+            HearAboutUs: selectedHearAboutUs.join(', ')  // Convert array of selected values into a comma-separated string
+        };
+
+        // Send AJAX request to the server
+        $.ajax({
+            url: '@Url.Action("RegisterUser", "LoginAndRegister")',  // Controller action URL
+            type: 'POST',
+            contentType: 'application/json',  // Set the content type to JSON
+            data: JSON.stringify(registrationData),  // Convert data to JSON format
+            success: function (response) {
+                // Handle successful registration
+                if (response.success) {
+                    alert('Registration successful!');
+                                window.location.href = '@Url.Action("Index", "LoginAndRegister")'; // Redirect to Index view
+
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function () {
+                // Handle error in case AJAX request fails
+                alert('Registration failed. Please try again.');
+            }
+        });
+    });
+</script>

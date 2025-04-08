@@ -1,0 +1,296 @@
+﻿@{
+    ViewBag.Title = "Monthly Report & Analytics";
+    Layout = "~/Views/Shared/MainTMSLayout.cshtml";
+}
+
+@model WALEED_TMS.Models.MonthlyReportModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <style>
+        .bgcolortbl th {
+            background: linear-gradient(to right, #cc2b5e, #753a88) !important;
+            color: white !important;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #cc2b5e, #753a88) !important;
+            color: white !important;
+        }
+
+        .card {
+            border-radius: 7px;
+        }
+
+        #MainBodyForThisPage {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"><h3 class="mb-4">Monthly Tours Reports & Analytics</h3></div>
+        <div class="col-md-2 ">
+            <select id="monthSelector" class="form-control">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div class="col-md-2 "></div>
+        </div>
+
+        @*<h1 class="mb-4">Monthly Tours Reports & Analytics</h1>*@
+        <div class="container mt-5 card" id="MainBodyForThisPage">
+
+
+            @if (Model != null)
+            {
+                <div class="row">
+                    <div class="col-lg-8">
+                        <canvas id="monthlyReportChart"></canvas>
+                    </div>
+                    <div class="col-lg-4">
+                        <br />
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Monthly Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="monthlySummary" class="mt-4">
+                                    <p>Total Count of Tours This Month: <b>@Model.TotalTours</b></p>
+                                    <p>Tours Accepted: <b>@Model.ToursAccepted</b> (Estimate: <b>$@Model.AcceptedEstimate.ToString("N2")</b>)</p>
+                                    <p>Tours Rejected: <b>@Model.ToursRejected</b> (Estimate: <b>$@Model.RejectedEstimate.ToString("N2")</b>)</p>
+                                    <p>Total Estimate of All Tours: <b>$@Model.TotalEstimate.ToString("N2")</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <h4>Accepted Tours</h4>
+                        <table id="acceptedToursTable" class="table table-bordered">
+                            <thead class="bgcolortbl">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Tour ID</th>
+                                    <th>Estimate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tour in Model.AcceptedTours)
+                                {
+                                    <tr>
+                                        <td>@tour.Date.ToString("dd-MM-yyyy")</td>
+                                        <td>@tour.TourID</td>
+                                        <td>$@tour.Estimate.ToString("N2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Rejected Tours</h4>
+                        <table id="rejectedToursTable" class="table table-bordered">
+                            <thead class="bgcolortbl">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Tour ID</th>
+                                    <th>Estimate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tour in Model.RejectedTours)
+                                {
+                                    <tr>
+                                        <td>@tour.Date.ToString("dd-MM-yyyy")</td>
+                                        <td>@tour.TourID</td>
+                                        <td>$@tour.Estimate.ToString("N2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <script>
+$(document).ready(function () {
+    // Initialize the month selector with current month
+    var currentMonth = @ViewBag.CurrentMonth;
+    $('#monthSelector').val(currentMonth);
+
+    // Handle month change
+    $('#monthSelector').change(function () {
+        var selectedMonth = $(this).val();
+        console.log("Selected Month:", selectedMonth);
+
+        $.ajax({
+            url: '@Url.Action("GetMonthlyReportData", "MonthlyReport")',
+            type: 'GET',
+            data: { selectedMonth: selectedMonth },
+            success: function (response) {
+                console.log("Response:", response);
+
+                if (response.success) {
+                    updateChartData(response.data);
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Ajax Error:", error);
+                alert('Failed to fetch data. Please try again.');
+            }
+        });
+    });
+
+    function updateChartData(data) {
+        // Update bar chart
+        monthlyReportChart.data.datasets[0].data = [
+            data.totalTours,
+            data.toursAccepted,
+            data.toursRejected
+        ];
+        monthlyReportChart.update();
+
+        // Update pie chart if exists
+        if (window.pieChart) {
+            pieChart.data.datasets[0].data = [
+                data.acceptedEstimate,
+                data.rejectedEstimate
+            ];
+            pieChart.update();
+        }
+
+        // Update monthly summary section
+        $('#monthlySummary').html(`
+            <p>Total Count of Tours This Month: <b>${data.totalTours}</b></p>
+            <p>Tours Accepted: <b>${data.toursAccepted}</b> (Estimate: <b>$${parseFloat(data.acceptedEstimate).toFixed(2)}</b>)</p>
+            <p>Tours Rejected: <b>${data.toursRejected}</b> (Estimate: <b>$${parseFloat(data.rejectedEstimate).toFixed(2)}</b>)</p>
+            <p>Total Estimate of All Tours: <b>$${parseFloat(data.totalEstimate).toFixed(2)}</b></p>
+        `);
+
+        // Update tables
+        var acceptedTableBody = $('#acceptedToursTable tbody');
+        var rejectedTableBody = $('#rejectedToursTable tbody');
+
+        // Clear existing rows
+        acceptedTableBody.empty();
+        rejectedTableBody.empty();
+
+        // Add new rows for accepted tours
+        if (data.acceptedTours && data.acceptedTours.length > 0) {
+            data.acceptedTours.forEach(function(tour) {
+                // Handle different date formats that might come from the server
+                var dateStr;
+                try {
+                    // Check if date is in Microsoft JSON date format
+                    if (typeof tour.Date === 'string' && tour.Date.indexOf('/Date(') > -1) {
+                        var timestamp = parseInt(tour.Date.replace(/\/Date\((\d+)\)\//, '$1'));
+                        var date = new Date(timestamp);
+                        dateStr = date.toLocaleDateString('en-GB');
+                    } else if (tour.Date instanceof Date) {
+                        dateStr = tour.Date.toLocaleDateString('en-GB');
+                    } else {
+                        // Try to parse as regular date string
+                        var date = new Date(tour.Date);
+                        dateStr = date.toLocaleDateString('en-GB');
+                    }
+                } catch (e) {
+                    console.error("Error parsing date:", e);
+                    dateStr = "Invalid date";
+                }
+
+                acceptedTableBody.append(`
+                    <tr>
+                        <td>${dateStr}</td>
+                        <td>${tour.TourID}</td>
+                        <td>$${parseFloat(tour.Estimate).toFixed(2)}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        // Add new rows for rejected tours
+        if (data.rejectedTours && data.rejectedTours.length > 0) {
+            data.rejectedTours.forEach(function(tour) {
+                // Handle different date formats that might come from the server
+                var dateStr;
+                try {
+                    // Check if date is in Microsoft JSON date format
+                    if (typeof tour.Date === 'string' && tour.Date.indexOf('/Date(') > -1) {
+                        var timestamp = parseInt(tour.Date.replace(/\/Date\((\d+)\)\//, '$1'));
+                        var date = new Date(timestamp);
+                        dateStr = date.toLocaleDateString('en-GB');
+                    } else if (tour.Date instanceof Date) {
+                        dateStr = tour.Date.toLocaleDateString('en-GB');
+                    } else {
+                        // Try to parse as regular date string
+                        var date = new Date(tour.Date);
+                        dateStr = date.toLocaleDateString('en-GB');
+                    }
+                } catch (e) {
+                    console.error("Error parsing date:", e);
+                    dateStr = "Invalid date";
+                }
+
+                rejectedTableBody.append(`
+                    <tr>
+                        <td>${dateStr}</td>
+                        <td>${tour.TourID}</td>
+                        <td>$${parseFloat(tour.Estimate).toFixed(2)}</td>
+                    </tr>
+                `);
+            });
+        }
+    }
+
+    // Initialize charts on page load
+    var monthlyReportChart = new Chart($('#monthlyReportChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Total Tours', 'Tours Accepted', 'Tours Rejected'],
+            datasets: [{
+                label: 'Monthly Tour Report',
+                data: [@Model.TotalTours, @Model.ToursAccepted, @Model.ToursRejected],
+                backgroundColor: ['#87CEFA', '#90EE90', '#FFB6C1']
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+});
+                </script>
+            }
+            else
+            {
+                <div class="alert alert-danger">No data available for the monthly report.</div>
+            }
+        </div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+﻿@model List<WALEED_TMS.Models.CarRentalModel>
+@{ ViewBag.Title = "Manage Rental Requests";
+    Layout = "~/Views/Shared/MainTMSLayout.cshtml"; }
+
+@section Styles {
+    <style>
+        .rental-card .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .rental-card {
+            margin-bottom: 20px;
+        }
+
+        .card {
+            height: 100%;
+        }
+
+        .rental-card .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .row {
+            margin-bottom: 20px;
+        }
+
+        .rental-details .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+            .rental-details .detail-item i {
+                width: 20px;
+            }
+
+        /* .status-filter {
+            min-width: 150px;
+        }*/
+
+        .badge {
+            padding: 8px 12px;
+            font-weight: 500;
+        }
+
+        #availabilityModal .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .toast {
+            border-radius: 10px;
+        }
+
+        .btn {
+            border-radius: 6px;
+            padding: 8px 16px;
+        }
+
+        .card-header:first-child {
+            border-radius: calc(.25rem - 1px) calc(2.25rem - 1px) 0 0;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #cc2b5e, #753a88) !important;
+            color: white !important;
+        }
+
+        #CheckAvaiBtn {
+            background: linear-gradient(to right, #cc2b5e, #753a88) !important;
+            color: white !important;
+        }
+    </style>
+}<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Rental Requests Management</h2>
+        <div class="d-flex gap-2">
+            <div class="status-filter">
+                <select class="selectpicker form-select" id="statusFilter" data-live-search="true">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="rentalCards">
+        @{int count = 0;}
+        @foreach (var rental in Model)
+        {
+            if (count > 0 && count % 3 == 0)
+            {
+@:</div><div class="row">
+}
+<div class="col-md-4 rental-card mb-4" data-status="@rental.Status.ToLower()">
+    <div class="card h-100 shadow-sm">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">@rental.CarName</h5>
+                <span class="badge rounded-pill @(rental.Status.ToLower() == "confirmed" ? "bg-success" : rental.Status.ToLower() == "rejected" ? "bg-danger" : "bg-warning")">
+                    @rental.Status
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="rental-details">
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt text-primary"></i>
+                    <span><B>From</B> : @rental.FromDate.ToString("dd MMM, yyyy")</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar-check text-success"></i>
+                    <span><B>To</B> : @rental.ToDate.ToString("dd MMM, yyyy")</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt text-danger"></i>
+                    <span><B>Pickup</B> : @rental.PickupLocation</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt text-success"></i>
+                    <span><B>Drop-off</B> : @rental.DropLocation</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user text-info"></i>
+                    <span><B>Booked by</B> : @rental.UserName</span>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                @if (rental.Status == "Pending")
+                {
+<div class="row">
+    <div class="col-md-2">
+        <button class="btn btn-success btn-sm me-2" onclick="updateStatus(@rental.BookingID, 'Confirmed')">
+            <i class="fas fa-check me-1"></i>
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-danger" onclick="updateStatus(@rental.BookingID, 'Rejected')">
+            <i class="fas fa-times me-1"></i>
+        </button>
+    </div>
+    <div class="col-md-8">
+        <button class="btn btn-info btn-sm" id="CheckAvaiBtn" onclick="checkAvailability(@rental.CarID, '@rental.FromDate.ToString("yyyy-MM-dd")', '@rental.ToDate.ToString("yyyy-MM-dd")')">
+            <i class="fas fa-search me-1"></i> Check Availability
+        </button>
+    </div>
+</div>}
+            </div>
+        </div>
+    </div>
+</div>count++;
+            }
+    </div>
+</div>
+
+<div class="modal fade" id="availabilityModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Car Availability Status</h5>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal"></button>*@
+            </div>
+            <div class="modal-body text-center py-4" id="availabilityMessage">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        });
+        $(document).ready(function() {
+            $('#statusFilter').change(function() {
+                const status = $(this).val();
+                if (status === 'all') {
+                    $('.rental-card').show();
+                } else {
+                    $('.rental-card').hide();
+                    $(`.rental-card[data-status="${status}"]`).show();
+                }
+            });
+        });
+
+        function updateStatus(bookingId, status) {
+            Swal.fire({
+                title: 'Confirm Action',
+                text: `Are you sure you want to ${status.toLowerCase()} this booking?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: status === 'Confirmed' ? '#28a745' : '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, proceed'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('@Url.Action("UpdateRentalStatus", "RentalCars")', {
+                        bookingId: bookingId,
+                        status: status
+                    })
+                    .done(function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Status updated successfully',
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => location.reload());
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    })
+                    .fail(function() {
+                        Swal.fire('Error', 'Failed to update status', 'error');
+                    });
+                }
+            });
+        }
+
+        function checkAvailability(carId, fromDate, toDate) {
+            $.get('@Url.Action("CheckCarAvailability", "RentalCars")', {
+                carId: carId,
+                fromDate: fromDate,
+                toDate: toDate
+            })
+            .done(function(response) {
+                const isAvailable = !response.message.includes('not available');
+                const icon = isAvailable ?
+                    '<i class="fas fa-check-circle text-success fa-3x mb-3"></i>' :
+                    '<i class="fas fa-times-circle text-danger fa-3x mb-3"></i>';
+
+                $('#availabilityMessage').html(`
+                    ${icon}
+                    <p class="mb-0 ${isAvailable ? 'text-success' : 'text-danger'}">${response.message}</p>
+                `);
+                $('#availabilityModal').modal('show');
+            })
+            .fail(function() {
+                Swal.fire('Error', 'Failed to check availability', 'error');
+            });
+        }
+    </script>
+}
