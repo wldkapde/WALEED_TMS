@@ -2,7 +2,9 @@
     ViewBag.Title = "Rental Cars";
     Layout = "~/Views/Shared/MainTMSLayout.cshtml";
 }
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <div class="container mt-4">
     <h2 class="mb-4">Rent a Car for Your Journey</h2>
 
@@ -59,7 +61,7 @@
             color: White;
         }
 
-        
+
 
         label {
             font-weight: bold;
@@ -73,6 +75,99 @@
         .modal-header {
             background: linear-gradient(to right, #cc2b5e, #753a88);
             color: white;
+        }
+
+
+
+        .custom-notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            min-width: 300px;
+            max-width: 400px;
+            font-family: Arial, sans-serif;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification-success .notification-content {
+            border-left: 4px solid #28a745;
+        }
+
+        .notification-error .notification-content {
+            border-left: 4px solid #dc3545;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            line-height: 1;
+        }
+
+        .notification-success .notification-icon {
+            color: #28a745;
+        }
+
+        .notification-error .notification-icon {
+            color: #dc3545;
+        }
+
+        .notification-message {
+            flex: 1;
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+            .notification-close:hover {
+                color: #000;
+            }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
         }
     </style>
 
@@ -244,27 +339,36 @@
                         <input type="hidden" id="carId" name="carId">
                         <input type="hidden" id="carName" name="carName">
                         <div class="form-group">
-                            <label for="fromDate">From Date:</label>
+                            <b>
+                                <label for="fromDate">From Date:</label>
+                            </b>
+                            <br />
                             <input type="date" class="form-control" id="fromDate" name="fromDate" required>
                         </div>
                         <div class="form-group">
-                            <label for="toDate">To Date:</label>
+                            <b>
+                                <label for="toDate">To Date:</label>
+                            </b><br />
                             <input type="date" class="form-control" id="toDate" name="toDate" required>
                         </div>
                         <div class="form-group">
-                            <label for="passengers">Number of Passengers</label>
+                            <b>
+                                <label for="passengers">Number of Passengers</label>
+                            </b><br />
                             <input type="number" class="form-control" id="passengers" name="passengers" placeholder="Number of Passengers" required>
                         </div>
                         <div class="form-group">
-                            <label for="pickupLocation">Pickup Location</label>
+                            <b>
+                                <label for="pickupLocation">Pickup Location</label>
+                            </b><br />
                             <input type="text" class="form-control" id="pickupLocation" name="pickupLocation" placeholder="Enter Pickup location" required>
                         </div>
                         <div class="form-group">
-                            <label for="dropLocation">Drop Location</label>
+                            <label for="dropLocation">Drop Location</label><br />
                             <input type="text" class="form-control" id="dropLocation" name="dropLocation" placeholder="Enter Drop location" required>
                         </div>
                         <div class="form-group">
-                            <label for="rentalPrice">Total Price:</label>
+                            <label for="rentalPrice">Total Price:</label><br />
                             <input type="text" class="form-control" id="rentalPrice" name="rentalPrice" readonly>
                         </div>
                     </form>
@@ -277,186 +381,238 @@
     </div>
 
 </div>
-    @section scripts {
-        <script>
-            $(document).ready(function () {
-                let rentalPrice = 0;
-                let stopsCount = 0;
-                let carId = 0;
-                const stopCharge = 250;
+<div id="custom-notification" class="custom-notification">
+    <div class="notification-content">
+        <span class="notification-icon"></span>
+        <p class="notification-message"></p>
+        <button id="notification-close" class="notification-close">×</button>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            let rentalPrice = 0;
+            let stopsCount = 0;
+            let carId = 0;
+            const stopCharge = 250;
 
-                $('#rentalModal').on('show.bs.modal', function (event) {
-                    let button = $(event.relatedTarget);
-                    rentalPrice = parseInt(button.data('price')) || 0;
-                    carId = parseInt(button.data('car-id')) || 0;
-                    $('#carId').val(carId);
-                    stopsCount = 0;
+            // Initialize modal with car data
+            $('#rentalModal').on('show.bs.modal', function (event) {
+                let button = $(event.relatedTarget);
+                rentalPrice = parseInt(button.data('price')) || 0;
+                carId = parseInt(button.data('car-id')) || 0;
+                let carName = button.closest('.car-card').find('h3').text();
 
-                    // Reset form
-                    $('#rentalForm')[0].reset();
-                    $('.stops-container').html(`
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Add Stop 1">
-                        <div class="input-group-append">
-                            <button class="btn btn-success add-stop" type="button">+</button>
+                // Set form values
+                $('#carId').val(carId);
+                $('#carName').val(carName);
+                $('#rentalPrice').val('₹' + rentalPrice);
+                stopsCount = 0;
+
+                // Reset form
+                $('#rentalForm')[0].reset();
+                $('.stops-container').html(`
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Add Stop 1">
+                                <div class="input-group-append">
+                                    <button class="btn btn-success add-stop" type="button">+</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            `);
+                    `);
 
-                    if ($('#stop-note').length > 0) {
-                        $('#stop-note').remove();
-                    }
+                // Remove stop note if it exists
+                if ($('#stop-note').length > 0) {
+                    $('#stop-note').remove();
+                }
 
-                    updatePrice();
-                });
+                updatePrice();
+            });
 
-                $('#fromDate, #toDate').on('change', function () {
-                    updatePrice();
-                });
+            // Update price when dates change
+            $('#fromDate, #toDate').on('change', function () {
+                updatePrice();
+            });
 
-                function updatePrice() {
-                    let fromDate = $('#fromDate').val();
-                    let toDate = $('#toDate').val();
+            // Price calculation logic
+            function updatePrice() {
+                let fromDate = $('#fromDate').val();
+                let toDate = $('#toDate').val();
 
-                    if (fromDate && toDate) {
-                        let start = new Date(fromDate);
-                        let end = new Date(toDate);
-                        let timeDiff = end - start;
-                        let days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+                if (fromDate && toDate) {
+                    let start = new Date(fromDate);
+                    let end = new Date(toDate);
+                    let timeDiff = end - start;
+                    let days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
 
-                        if (days > 0) {
-                            let total = rentalPrice * days + stopsCount * stopCharge;
-                            $('#rentalPrice').val('₹' + total);
-                        } else {
-                            $('#rentalPrice').val('₹' + rentalPrice);
-                        }
+                    if (days > 0) {
+                        let total = rentalPrice * days + stopsCount * stopCharge;
+                        $('#rentalPrice').val('₹' + total);
                     } else {
                         $('#rentalPrice').val('₹' + rentalPrice);
                     }
+                } else {
+                    $('#rentalPrice').val('₹' + rentalPrice);
+                }
+            }
+
+            // Add stop input field
+            $(document).on('click', '.add-stop', function () {
+                stopsCount++;
+                let newStop = `
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Add Stop ${stopsCount + 1}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-success add-stop" type="button">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                $(this).closest('.form-group').after(newStop);
+                updatePrice();
+            });
+
+            // Handle geolocation
+            $('.use-location').on('click', function () {
+                const targetField = $(this).data('target') === 'pickup' ? $('#pickupLocation') : $('#dropLocation');
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+                            reverseGeocode(latitude, longitude, targetField);
+                        },
+                        function (error) {
+                            showNotification('Unable to retrieve your location: ' + getGeolocationError(error), 'error');
+                        }
+                    );
+                } else {
+                    showNotification('Geolocation is not supported by this browser.', 'error');
+                }
+            });
+
+            // Reverse geocode coordinates to address
+            function reverseGeocode(latitude, longitude, targetField) {
+                const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response && response.display_name) {
+                            targetField.val(response.display_name);
+                        } else {
+                            targetField.val(`${latitude}, ${longitude}`);
+                        }
+                    },
+                    error: function () {
+                        targetField.val(`${latitude}, ${longitude}`);
+                    }
+                });
+            }
+
+            // Custom notification function
+            function showNotification(message, type = 'success') {
+                const notification = $('#custom-notification');
+                const messageElement = notification.find('.notification-message');
+                const iconElement = notification.find('.notification-icon');
+
+                // Set message
+                messageElement.text(message);
+
+                // Set icon and styling based on type
+                if (type === 'success') {
+                    iconElement.html('✓');
+                    notification.removeClass('notification-error').addClass('notification-success');
+                } else {
+                    iconElement.html('✗');
+                    notification.removeClass('notification-success').addClass('notification-error');
                 }
 
-                $(document).on('click', '.add-stop', function () {
-                    stopsCount++;
-                    let newStop = `
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Add Stop ${stopsCount + 1}">
-                        <div class="input-group-append">
-                            <button class="btn btn-success add-stop" type="button">+</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-                    $(this).closest('.form-group').after(newStop);
-                    updatePrice();
+                // Show notification with animation
+                notification.fadeIn(300).css('display', 'flex');
+
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    notification.fadeOut(300);
+                }, 5000);
+            }
+
+            // Close notification on click
+            $('#notification-close').on('click', function () {
+                $('#custom-notification').fadeOut(300);
+            });
+
+            // Handle form submission
+            $('#submitRental').on('click', function () {
+                if (!$('#rentalForm')[0].checkValidity()) {
+                    $('#rentalForm')[0].reportValidity();
+                    return;
+                }
+
+                const rentalData = {
+                    CarID: $('#carId').val(),
+                    CarName: $('#carName').val(),
+                    FromDate: $('#fromDate').val(),
+                    ToDate: $('#toDate').val(),
+                    NumberOfPassengers: $('#passengers').val(),
+                    PickupLocation: $('#pickupLocation').val(),
+                    DropLocation: $('#dropLocation').val(),
+                    TotalPrice: parseFloat($('#rentalPrice').val().replace('₹', '')) || 0
+                };
+
+                console.log('Sending rentalData:', rentalData);
+
+                $.ajax({
+                    url: '/RentalCars/BookCar',
+                    type: 'POST',
+                    data: rentalData,
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('Success Response:', response);
+                        if (response.success) {
+                            showNotification("Your application for the car rental is submitted successfully, Check your Rental Status on 'View Car Rental Status Page'", 'success');
+                            $('#rentalModal').modal('hide');
+                        } else {
+                            showNotification('Booking failed: ' + (response.message || 'Unknown error'), 'error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error Details:', {
+                            status: status,
+                            error: error,
+                            responseText: xhr.responseText,
+                            statusCode: xhr.status
+                        });
+                        let errorMessage = 'An error occurred';
+                        try {
+                            const parsedError = JSON.parse(xhr.responseText);
+                            errorMessage = parsedError.message || error;
+                        } catch (e) {
+                            errorMessage = xhr.responseText || error;
+                        }
+                        showNotification(errorMessage, 'error');
+                    }
                 });
             });
 
-                // Get user's current location
-                $('.use-location').on('click', function () {
-                    const targetField = $(this).data('target') === 'pickup' ? $('#pickupLocation') : $('#dropLocation');
-
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(
-                            function (position) {
-                                // Get coordinates
-                                const latitude = position.coords.latitude;
-                                const longitude = position.coords.longitude;
-
-                                // Use reverse geocoding to get address
-                                reverseGeocode(latitude, longitude, targetField);
-                            },
-                            function (error) {
-                                let errorMessage = "Unable to retrieve your location. ";
-                                switch (error.code) {
-                                    case error.PERMISSION_DENIED:
-                                        errorMessage += "User denied the request for Geolocation.";
-                                        break;
-                                    case error.POSITION_UNAVAILABLE:
-                                        errorMessage += "Location information is unavailable.";
-                                        break;
-                                    case error.TIMEOUT:
-                                        errorMessage += "The request to get user location timed out.";
-                                        break;
-                                    case error.UNKNOWN_ERROR:
-                                        errorMessage += "An unknown error occurred.";
-                                        break;
-                                }
-                                alert(errorMessage);
-                            }
-                        );
-                    } else {
-                        alert("Geolocation is not supported by this browser.");
-                    }
-                });
-
-                function reverseGeocode(latitude, longitude, targetField) {
-                    // Using Nominatim API for reverse geocoding (free and doesn't require API key)
-                    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
-
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        success: function (response) {
-                            if (response && response.display_name) {
-                                targetField.val(response.display_name);
-                            } else {
-                                targetField.val(`${latitude}, ${longitude}`);
-                            }
-                        },
-                        error: function () {
-                            // If reverse geocoding fails, just use coordinates
-                            targetField.val(`${latitude}, ${longitude}`);
-                        }
-                    });
+            // Helper function for geolocation error messages
+            function getGeolocationError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        return "User denied the request for Geolocation.";
+                    case error.POSITION_UNAVAILABLE:
+                        return "Location information is unavailable.";
+                    case error.TIMEOUT:
+                        return "The request to get user location timed out.";
+                    case error.UNKNOWN_ERROR:
+                        return "An unknown error occurred.";
+                    default:
+                        return "An unknown error occurred.";
                 }
-                // Set car details when the modal is opened
-                $('.btn[data-toggle="modal"]').on('click', function () {
-                    const carId = $(this).data('car-id');
-                    const price = $(this).data('price');
-                    const carName = $(this).closest('.car-card').find('h3').text(); // Get the car name from the card
-
-                    $('#carId').val(carId);
-                    $('#carName').val(carName); // Set the car name
-                    $('#rentalPrice').val('₹' + price);
-                });
-
-                // Handle rental form submission
-                $('#submitRental').on('click', function () {
-                    if (!$('#rentalForm')[0].checkValidity()) {
-                        $('#rentalForm')[0].reportValidity();
-                        return;
-                    }
-
-                    const rentalData = {
-                        CarID: $('#carId').val(),
-                        CarName: $('#carName').val(),
-                        FromDate: $('#fromDate').val(),
-                        ToDate: $('#toDate').val(),
-                        NumberOfPassengers: $('#passengers').val(),
-                        PickupLocation: $('#pickupLocation').val(),
-                        DropLocation: $('#dropLocation').val(),
-                        TotalPrice: $('#rentalPrice').val().replace('₹', '')
-                    };
-
-                    $.ajax({
-                        url: '/RentalCars/BookCar',
-                        type: 'POST',
-                        data: rentalData,
-                        success: function (response) {
-                            if (response.success) {
-                                alert('Booking successful!');
-                                $('#rentalModal').modal('hide');
-                            } else {
-                                alert('Booking failed: ' + response.message);
-                            }
-                        },
-                        error: function () {
-                            alert('An error occurred while processing your request.');
-                        }
-                    });
-                });
-        </script>
-    }
+            }
+        });
+    </script>   }

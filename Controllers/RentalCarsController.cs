@@ -77,27 +77,37 @@ namespace WALEED_TMS.Controllers
         }
 
 
-
+        [HttpPost]
         public ActionResult BookCar(CarRentalModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                string userEmail = Session["UserEmail"]?.ToString();
-               
-
-                UserDAL userDal = new UserDAL();
-                model.UserID = userDal.GetUserIDByEmail(userEmail);
-
-                if (rentalCarDAL.InsertCarRental(model))
+                if (ModelState.IsValid)
                 {
-                    TempData["Success"] = "Car booked successfully!";
-                    return RedirectToAction("MyRentals");
+                    string userEmail = Session["UserEmail"]?.ToString();
+                    if (string.IsNullOrEmpty(userEmail))
+                    {
+                        return Json(new { success = false, message = "User not logged in." }, "application/json");
+                    }
+
+                    UserDAL userDal = new UserDAL();
+                    model.UserID = userDal.GetUserIDByEmail(userEmail);
+
+                    if (rentalCarDAL.InsertCarRental(model))
+                    {
+                        return Json(new { success = true, message = "Car booked successfully!" }, "application/json");
+                    }
+
+                    return Json(new { success = false, message = "Failed to book the car. Please try again." }, "application/json");
                 }
 
-                ModelState.AddModelError("", "Failed to book the car. Please try again.");
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return Json(new { success = false, message = "Invalid data submitted.", errors = errors.ToList() }, "application/json");
             }
-
-            return View(model);
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An unexpected error occurred: " + ex.Message }, "application/json");
+            }
         }
 
         public ActionResult MyBookings()

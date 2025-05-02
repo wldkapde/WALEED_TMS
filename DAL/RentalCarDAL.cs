@@ -11,7 +11,7 @@ namespace WALEED_TMS.DAL
     {
         private string connectionString = ConfigurationManager.ConnectionStrings["DBCon"].ConnectionString;
 
-    
+
 
 
         public bool InsertCarRental(CarRentalModel rental)
@@ -31,21 +31,23 @@ namespace WALEED_TMS.DAL
                     {
                         cmd.Parameters.AddWithValue("@UserID", rental.UserID);
                         cmd.Parameters.AddWithValue("@CarID", rental.CarID);
-                        cmd.Parameters.AddWithValue("@CarName", rental.CarName);
+                        cmd.Parameters.AddWithValue("@CarName", rental.CarName ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@FromDate", rental.FromDate);
                         cmd.Parameters.AddWithValue("@ToDate", rental.ToDate);
-                        cmd.Parameters.AddWithValue("@PickupLocation", rental.PickupLocation);
-                        cmd.Parameters.AddWithValue("@DropLocation", rental.DropLocation);
+                        cmd.Parameters.AddWithValue("@PickupLocation", rental.PickupLocation ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@DropLocation", rental.DropLocation ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@NumberOfPassengers", rental.NumberOfPassengers);
                         cmd.Parameters.AddWithValue("@TotalPrice", rental.TotalPrice);
 
                         con.Open();
-                        return cmd.ExecuteNonQuery() > 0;
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0;
                     }
                 }
             }
             catch (Exception ex)
             {
+                // Log the error (e.g., to a file, console, or a logging framework)
                 Console.WriteLine("Error inserting car rental: " + ex.Message);
                 return false;
             }
